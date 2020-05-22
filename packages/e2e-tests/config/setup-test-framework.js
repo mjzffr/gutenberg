@@ -48,7 +48,7 @@ const DOWNLOAD_THROUGHPUT = process.env.DOWNLOAD_THROUGHPUT;
  * @type {Object<string,string>}
  */
 const OBSERVED_CONSOLE_MESSAGE_TYPES = {
-	warning: 'warn',
+	// warning: 'warn',
 	error: 'error',
 };
 
@@ -89,15 +89,15 @@ export async function trashExistingPosts( postType = 'post' ) {
 	}
 
 	// Select all posts.
-	// await page.waitForSelector( '[id^=cb-select-all-]' );
+	await page.waitForSelector( '[id^=cb-select-all-]' );
 	await page.click( '[id^=cb-select-all-]' );
 	// Select the "bulk actions" > "trash" option.
 	await page.select( '#bulk-action-selector-top', 'trash' );
 	// Submit the form to send all draft/scheduled/published posts to the trash.
 	await page.click( '#doaction' );
-	// await page.waitForXPath(
-	// 	'//*[contains(@class, "updated notice")]/p[contains(text(), "moved to the Trash.")]'
-	// );
+	await page.waitForXPath(
+		'//*[contains(@class, "updated notice")]/p[contains(text(), "moved to the Trash.")]'
+	);
 	await switchUserToTest();
 }
 
@@ -164,6 +164,31 @@ function observeConsoleLogging() {
 
 		// Firefox
 		if ( text.includes( 'is deprecated' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'FaviconLoader.jsm' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'Layout was forced' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'uncaught exception: Object' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'fb.me' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'may not work well' ) ) {
 			return;
 		}
 
@@ -305,7 +330,7 @@ beforeAll( async () => {
 } );
 
 afterEach( async () => {
-	//await runAxeTestsForBlockEditor();
+	await runAxeTestsForBlockEditor();
 	await setupBrowser();
 } );
 
