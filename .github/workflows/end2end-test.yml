@@ -1,11 +1,13 @@
 name: End-to-End Tests
 
 on:
+  workflow_dispatch:
+    
   pull_request:
     paths-ignore:
     - '**.md'
   push:
-    branches: [master]
+    branches: [firefox-ci]
     paths-ignore:
     - '**.md'
 
@@ -52,9 +54,31 @@ jobs:
         chmod -R 767 ./ # TODO: Possibly integrate in wp-env
         npm run wp-env start
 
-    - name: Running the tests
+    - name: Use Python 3
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    # Guteberg depends on Puppeteer 3 so we need to install Nightly ourselves
+    - name: Install Firefox Nightly
+      env:
+        FIREFOX_PATH: $GITHUB_WORKSPACE/firefox-latest
       run: |
-        $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --listTests > ~/.jest-e2e-tests
+        python -m pip install --upgrade pip
+        pip install mozdownload
+        rm -rf $FIREFOX_PATH
+        mozdownload -t daily -d $FIREFOX_PATH/latest.tar.bz --log-level DEBUG
+        cd $FIREFOX_PATH; tar -xvf latest.tar.bz; cd -
+        ls $FIREFOX_PATH/firefox/firefox
+
+    - name: Running the tests (Firefox)
+      env:
+        PUPPETEER_SKIP_DOWNLOAD: 1
+        PUPPETEER_EXECUTABLE_PATH: $GITHUB_WORKSPACE/firefox-latest/firefox/firefox
+        JEST_PUPPETEER_CONFIG: ./packages/scripts/config/puppeteer-firefox.config.js
+      run: |
+        ls $PUPPETEER_EXECUTABLE_PATH
+        $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --listTests | grep test\.js$ > ~/.jest-e2e-tests
         $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --cacheDirectory="$HOME/.jest-cache" --runTestsByPath $( awk 'NR % 4 == ${{ matrix.part }} - 1' < ~/.jest-e2e-tests )
 
     - name: Archive debug artifacts (screenshots, HTML snapshots)
