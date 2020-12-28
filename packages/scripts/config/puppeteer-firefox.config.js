@@ -2,6 +2,7 @@ module.exports = {
 	launch: {
 		devtools: process.env.PUPPETEER_DEVTOOLS === 'true',
 		headless: process.env.PUPPETEER_HEADLESS !== 'false',
+		dumpio: true,
 		slowMo: 0,
 		// set the binary path here since puppeteer-core ignores Puppeteer's
 		// environment variables
@@ -10,7 +11,7 @@ module.exports = {
 		// Gutenberg depends on Puppeteer 3, so bring Firefox prefs up-to-date
 		extraPrefsFirefox: {
 			// Enable additional Firefox logging from its protocol implementation
-			// 'remote.log.level': 'Trace',
+			'remote.log.level': 'Trace',
 			'browser.newtabpage.activity-stream.feeds.system.topstories': false,
 			'fission.autostart': false,
 			'dom.disable_beforeunload': true,

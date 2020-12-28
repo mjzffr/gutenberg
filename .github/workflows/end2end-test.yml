@@ -67,7 +67,7 @@ jobs:
     - name: Running the tests (Firefox)
       env:
         PUPPETEER_SKIP_DOWNLOAD: 1
-        PUPPETEER_TIMEOUT: 25
+        PUPPETEER_TIMEOUT: 60
         PUPPETEER_EXECUTABLE_PATH: $GITHUB_WORKSPACE/firefox-latest/firefox/firefox
         JEST_PUPPETEER_CONFIG: ./packages/scripts/config/puppeteer-firefox.config.js
       run: |
