@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        part: [1, 2, 3, 4]
+        part: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 
     steps:
@@ -73,7 +73,7 @@ jobs:
       run: |
         ls $PUPPETEER_EXECUTABLE_PATH
         $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --listTests | grep test\.js$ > ~/.jest-e2e-tests
-        $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --cacheDirectory="$HOME/.jest-cache" --runTestsByPath $( awk 'NR % 4 == ${{ matrix.part }} - 1' < ~/.jest-e2e-tests )
+        $( npm bin )/wp-scripts test-e2e --config=./packages/e2e-tests/jest.config.js --cacheDirectory="$HOME/.jest-cache" --runTestsByPath $( awk 'NR % 16 == ${{ matrix.part }} - 1' < ~/.jest-e2e-tests )
 
     - name: Archive debug artifacts (screenshots, HTML snapshots)
       uses: actions/upload-artifact@v2
