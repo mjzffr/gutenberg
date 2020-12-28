@@ -2,7 +2,7 @@ module.exports = {
 	launch: {
 		devtools: process.env.PUPPETEER_DEVTOOLS === 'true',
 		headless: process.env.PUPPETEER_HEADLESS !== 'false',
-		slowMo: parseInt( process.env.PUPPETEER_SLOWMO, 10 ) || 0,
+		slowMo: 0,
 		// set the binary path here since puppeteer-core ignores Puppeteer's
 		// environment variables
 		executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
@@ -13,6 +13,7 @@ module.exports = {
 			// 'remote.log.level': 'Trace',
 			'browser.newtabpage.activity-stream.feeds.system.topstories': false,
 			'fission.autostart': false,
+			'dom.disable_beforeunload': true,
 		},
 	},
 };

@@ -53,7 +53,7 @@ const OFFLINE = process.env.OFFLINE;
  * @type {Object<string,string>}
  */
 const OBSERVED_CONSOLE_MESSAGE_TYPES = {
-	warning: 'warn',
+	//warning: 'warn',
 	error: 'error',
 };
 
@@ -109,6 +109,43 @@ function observeConsoleLogging() {
 		if ( text.includes( 'This is a global warning' ) ) {
 			return;
 		}
+
+		// Firefox
+		if ( text.includes( 'non standard property' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'is deprecated' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'FaviconLoader.jsm' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'Layout was forced' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'uncaught exception: Object' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'fb.me' ) ) {
+			return;
+		}
+
+		// Firefox
+		if ( text.includes( 'may not work well' ) ) {
+			return;
+		}
+
+
 
 		// A chrome advisory warning about SameSite cookies is informational
 		// about future changes, tracked separately for improvement in core.
